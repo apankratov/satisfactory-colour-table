@@ -201,10 +201,7 @@ function loadResults() {
   const searchString = searchInput.value;
 
   let filteredResults = new Array();
-  console.log(searchableColours);
-
-  console.log(searchString);
-
+  
   if (searchString === "") {
     filteredResults = searchableColours;
     searchInput.placeholder = `Search ${filteredResults.length} colours`;
