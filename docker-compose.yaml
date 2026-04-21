@@ -1,9 +1,11 @@
 services:
   proxy:
-    # Stupid Movistar screws up routing to resources behind CloudFlare
+    # Stupid Movistar screws up routing to resources behind CloudFlare.
     # Because stupid LaLiga is scared of soccer streams pirating.
     #
-    # Yes, Dockerhub is behind CloudFlare.
+    # Yes, Dockerhub is behind CloudFlare and just `image: nginx`
+    # fails on connection timeout.
+    #
     # Those alternatively gifted LaLiga guys obviously don't 
     # understand CDN and Dockerhub (in their view it's some nerdy 
     # shit noone except bunch of square-headed guys uses).
