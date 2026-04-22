@@ -30,12 +30,20 @@ document
  * We don't want to sort colours list on every loadResults().
  * Sorting once.
  */
-const colours = coloursUnsorted.sort((a, b) => {
-  a.aliases[0].localeCompare(b.aliases[0]);
-});
+const colours = coloursUnsorted.sort(compareByAlias);
 
 const searchInput = document.getElementById("search-input");
 const searchOptions = document.getElementById("search-options");
+
+/**
+ * Instead of creating new div for no results each time
+ * we create it once and just toggle display mode.
+ */
+const noResultsMessage = document.createElement("div");
+noResultsMessage.id = "no-results-message";
+noResultsMessage.style.display = "none";
+noResultsMessage.innerHTML =
+  "<h4>No colours were found.</h4><p>Check your spelling and filters.</p>";
 
 /**
  * For further convenience we build a map from
@@ -164,9 +172,14 @@ function buildColorItem(colour) {
   return colourItem;
 }
 
+function compareByAlias(a, b) {
+  return a.aliases[0].localeCompare(b.aliases[0]);
+}
+
 function loadResults() {
   const results = document.getElementById("results");
   results.innerHTML = "";
+  results.appendChild(noResultsMessage);
 
   let selectedCategories = [];
   for (const checkboxContainer of searchOptions.getElementsByClassName(
@@ -201,7 +214,7 @@ function loadResults() {
   const searchString = searchInput.value;
 
   let filteredResults = new Array();
-  
+
   if (searchString === "") {
     filteredResults = searchableColours;
     searchInput.placeholder = `Search ${filteredResults.length} colours`;
@@ -213,14 +226,14 @@ function loadResults() {
     });
   }
 
+  filteredResults.sort(compareByAlias);
+
   if (filteredResults.length > 0) {
+    noResultsMessage.style.display = "none";
     filteredResults.forEach((colour) => {
       results.appendChild(buildColorItem(colour));
     });
   } else {
-    const noResultsMessage = document.createElement("div");
-    noResultsMessage.innerHTML =
-      "<h4>No colours were found.</h4><p>Check your spelling and filters.</p>";
-    results.appendChild(noResultsMessage);
-  };
+    noResultsMessage.style.display = "block";
+  }
 }
